@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+require("dotenv").config(); // تحميل قيم .env
 const { registerUser, loginUser } = require("./controllers/userController");
 const { createSubscription, getSubscriptions } = require("./controllers/subscriptionController");
 const authMiddleware = require("./middleware/authMiddleware");
@@ -17,11 +18,7 @@ app.get("/api/subscriptions", authMiddleware, getSubscriptions);
 
 // MongoDB Connection
 mongoose
-  .connect("mongodb://localhost:27017/subscription_management", {
-    // الخيارات التالية ليست ضرورية في الإصدارات الحديثة من Mongoose، يمكن حذفها إذا كنت تستخدم الإصدار الأخير:
-    // useNewUrlParser: true,
-    // useUnifiedTopology: true,
-  })
+  .connect(process.env.MONGODB_URI, {}) // استخدام مسار الاتصال من ملف .env
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.log("MongoDB connection error:", err));
 

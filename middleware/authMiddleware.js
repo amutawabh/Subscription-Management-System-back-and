@@ -1,11 +1,11 @@
 const jwt = require("jsonwebtoken");
 
 const authMiddleware = (req, res, next) => {
-  const token = req.header("Authorization");
+  const token = req.header("Authorization")?.split(" ")[1]; // تعديل التعامل مع صيغة Bearer
   if (!token) return res.status(401).json({ message: "Access Denied" });
 
   try {
-    const verified = jwt.verify(token, "secret_key");
+    const verified = jwt.verify(token, process.env.JWT_SECRET); // استخدام المفتاح السري من ملف .env
     req.user = verified;
     next();
   } catch (error) {
